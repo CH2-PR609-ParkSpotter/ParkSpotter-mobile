@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">ParkSpotter</string>
+    <string name="logo_image">Logo Image</string>
+    <string name="background_image">Background Image</string>
+    <string name="email_address">Input Your Email</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="input_password">Input Your Password</string>
+    <string name="create_email">Create Your Email</string>
+    <string name="name">Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="add_your_number">Add Your Number</string>
+    <string name="menu_home">menu home</string>
+    <string name="map">map</string>
+    <string name="setting">setting</string>
+</resources>
