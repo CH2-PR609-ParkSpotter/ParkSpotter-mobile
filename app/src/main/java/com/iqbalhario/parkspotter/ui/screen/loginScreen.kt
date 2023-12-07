@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.iqbalhario.parkspotter.R
+import com.iqbalhario.parkspotter.ui.navigation.Screen
 import com.iqbalhario.parkspotter.ui.theme.PurpleGrey40
 import com.iqbalhario.parkspotter.ui.theme.green
 
@@ -57,7 +58,6 @@ import com.iqbalhario.parkspotter.ui.theme.green
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(navController: NavController) {
-    val context = LocalContext.current
     val emailVal = remember { mutableStateOf("") }
     val passwordVal = remember { mutableStateOf("") }
     val passwordVisibility = remember { mutableStateOf(false) }
@@ -202,7 +202,7 @@ fun LoginScreen(navController: NavController) {
                         colors = ButtonDefaults.buttonColors(green),
 
                         onClick = {
-                            navController.navigate("park_spotter")
+                            navController.navigate(Screen.Home.route)
                         },
                         modifier = Modifier
                             .fillMaxWidth(0.8f)
