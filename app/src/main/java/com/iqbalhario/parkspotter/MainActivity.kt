@@ -1,5 +1,7 @@
 package com.iqbalhario.parkspotter
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,6 +20,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -85,7 +88,7 @@ fun navigatePage(
             composable(Screen.Home.route) {
                 HomeScreen()
             }
-            composable(Screen.Cart.route) {
+            composable(Screen.Map.route) {
                 MapScreen()
             }
             composable(Screen.Profile.route) {
@@ -114,7 +117,7 @@ private fun BottomBar(
             NavigationItem(
                 title = stringResource(R.string.map),
                 icon = Icons.Default.AccountCircle,
-                screen = Screen.Cart
+                screen = Screen.Map
             ),
             NavigationItem(
                 title = stringResource(R.string.setting),
