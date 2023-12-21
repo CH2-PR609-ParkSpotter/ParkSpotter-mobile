@@ -32,6 +32,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.iqbalhario.parkspotter.ui.navigation.NavigationItem
 import com.iqbalhario.parkspotter.ui.navigation.Screen
+import com.iqbalhario.parkspotter.ui.screen.DetailScreen
 import com.iqbalhario.parkspotter.ui.screen.HomeScreen
 import com.iqbalhario.parkspotter.ui.screen.LoginScreen
 import com.iqbalhario.parkspotter.ui.screen.MapScreen
@@ -60,7 +61,7 @@ fun navigatePage(
     val currentRoute = navBackStackEntryState.value?.destination?.route
     Scaffold(
         bottomBar = {
-            if (currentRoute != "splash_screen" && currentRoute != "login_page" && currentRoute != "register_page") {
+            if (currentRoute != "splash_screen" && currentRoute != "login_page" && currentRoute != "register_page" && currentRoute != "detail_parkir/{parkirId}") {
                 BottomBar(navController)
             }
 
@@ -86,13 +87,17 @@ fun navigatePage(
                 )
             }
             composable(Screen.Home.route) {
-                HomeScreen()
+                HomeScreen(navController = navController)
             }
             composable(Screen.Map.route) {
                 MapScreen()
             }
             composable(Screen.Profile.route) {
                 SettingSceen()
+            }
+            composable("detail_parkir/{parkirId}") { backStackEntry ->
+                val parkirId = backStackEntry.arguments?.getString("parkirId")?.toIntOrNull()
+                DetailScreen(parkirId)
             }
         }
     }

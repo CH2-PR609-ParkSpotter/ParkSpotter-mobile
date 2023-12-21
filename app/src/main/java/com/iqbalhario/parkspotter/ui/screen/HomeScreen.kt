@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -28,7 +29,9 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -36,40 +39,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iqbalhario.parkspotter.R
+import com.iqbalhario.parkspotter.viewmodel.HomeScreenViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.iqbalhario.parkspotter.ui.navigation.Screen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreen() {
-    val list = listOf(
-        "Java",
-        "Kotlin",
-        "Python",
-        "Swift",
-        "JavaScript",
-        "C",
-        "C++",
-        "XML",
-        "Dart",
-        "Go",
-        "R",
-        "PHP",
-        "Ruby",
-        "Perl",
-        "SQL",
-        "Objective-C",
-        "HTML",
-        "CSS"
-    )
+fun HomeScreen(viewModel: HomeScreenViewModel = viewModel(), navController: NavController) {
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        viewModel.getParkingData(context)
+    }
 
+    val filteredParkingData = viewModel.filteredParkingData.collectAsState(initial = emptyList()).value
     var query = remember { mutableStateOf("") }
+
 
     Scaffold(
         topBar = {
@@ -137,18 +132,24 @@ fun HomeScreen() {
                     )
                     Spacer(modifier = Modifier.height(16.dp)) // Jika Anda ingin memberikan ruang di antara teks dan SearchBar
                     SearchBar(
-                        query = query.value,
-                        onQueryChange = { newQuery ->
-                            query.value = newQuery
+                        query = query,
+                        onQueryChange = {
+                            query.value = it
+                            viewModel.updateSearchQuery(it)
                         }
                     )
                     LazyColumn(
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        items(items = list.filter { it.contains(query.value, ignoreCase = true) }) { item ->
+                        items(filteredParkingData) { parkirItem ->
                             Text(
-                                text = item,
-                                modifier = Modifier.padding(16.dp)
+                                text = parkirItem.name,
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .clickable {
+                                        val route = Screen.DetailParkir.createRoute(parkirItem.id)
+                                        navController.navigate(route)
+                                    }
                             )
                         }
                     }
@@ -161,11 +162,11 @@ fun HomeScreen() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
-    query: String,
+    query: MutableState<String>,
     onQueryChange: (String) -> Unit
 ) {
     TextField(
-        value = query,
+        value =  query.value,
         onValueChange = onQueryChange,
         singleLine = true,
         leadingIcon = {
