@@ -23,6 +23,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,11 +36,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.iqbalhario.parkspotter.R
 import com.iqbalhario.parkspotter.ui.navigation.Screen
+import com.iqbalhario.parkspotter.viewmodel.DetailScreenViewModel
+import com.iqbalhario.parkspotter.viewmodel.HomeScreenViewModel
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-fun DetailScreen(parkirId: Int?) {
+fun DetailScreen(parkirId: Int?, viewModel: DetailScreenViewModel) {
+    LaunchedEffect(parkirId) {
+        parkirId?.let { viewModel.loadParkirDetail(it) }
+    }
+
+    val parkirDetail = viewModel.parkirDetail.collectAsState().value
     Text(text = "Detail untuk parkir ID: $parkirId")
     Scaffold(
         topBar = {
@@ -88,7 +97,7 @@ fun DetailScreen(parkirId: Int?) {
                     Spacer(modifier = Modifier.height(60.dp))
                     Row {
                         Text(
-                            text = "Hi, find the best",
+                            text = parkirDetail?.name ?: "Nama Parkir Tidak Diketahui",
                             fontWeight = FontWeight.Medium,
                             fontSize = 20.sp,
                         )

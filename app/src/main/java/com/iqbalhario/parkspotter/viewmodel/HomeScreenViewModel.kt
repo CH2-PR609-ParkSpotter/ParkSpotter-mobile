@@ -8,6 +8,7 @@ import com.iqbalhario.parkspotter.model.ParkirData
 import java.io.InputStreamReader
 import androidx.lifecycle.Lifecycle.State
 import androidx.lifecycle.viewModelScope
+import com.iqbalhario.parkspotter.model.ParkirItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -43,4 +44,7 @@ class HomeScreenViewModel : ViewModel() {
         val reader = InputStreamReader(inputStream)
         return Gson().fromJson(reader, ParkirData::class.java)
     }
+
+
+
 }
