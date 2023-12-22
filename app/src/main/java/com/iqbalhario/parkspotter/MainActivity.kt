@@ -26,6 +26,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.maps.MapsInitializer
 import com.iqbalhario.parkspotter.Factory.ViewModelFactory
 import com.iqbalhario.parkspotter.ui.navigation.NavigationItem
 import com.iqbalhario.parkspotter.ui.navigation.Screen
@@ -42,6 +43,7 @@ import com.iqbalhario.parkspotter.viewmodel.DetailScreenViewModel
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MapsInitializer.initialize(this)
         setContent {
             ParkSpotterTheme {
                 navigatePage()
@@ -88,7 +90,7 @@ fun navigatePage(
                 HomeScreen(navController = navController)
             }
             composable(Screen.Map.route) {
-                MapScreen()
+                MapScreen(navController = navController)
             }
             composable(Screen.Profile.route) {
                 SettingSceen()
