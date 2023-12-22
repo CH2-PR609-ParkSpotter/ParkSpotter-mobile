@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
@@ -15,10 +16,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -35,7 +37,7 @@ import com.iqbalhario.parkspotter.ui.screen.HomeScreen
 import com.iqbalhario.parkspotter.ui.screen.LoginScreen
 import com.iqbalhario.parkspotter.ui.screen.MapScreen
 import com.iqbalhario.parkspotter.ui.screen.RegisterScreen
-import com.iqbalhario.parkspotter.ui.screen.SettingSceen
+import com.iqbalhario.parkspotter.ui.screen.SettingsScreen
 import com.iqbalhario.parkspotter.ui.screen.SplashScreen
 import com.iqbalhario.parkspotter.ui.theme.ParkSpotterTheme
 import com.iqbalhario.parkspotter.viewmodel.DetailScreenViewModel
@@ -92,8 +94,8 @@ fun navigatePage(
             composable(Screen.Map.route) {
                 MapScreen(navController = navController)
             }
-            composable(Screen.Profile.route) {
-                SettingSceen()
+            composable(Screen.Setting.route) {
+                SettingsScreen(navController = navController)
             }
             composable("detail_parkir/{parkirId}") { backStackEntry ->
                 val parkirId = backStackEntry.arguments?.getString("parkirId")?.toIntOrNull()
@@ -125,22 +127,31 @@ private fun BottomBar(
             ),
             NavigationItem(
                 title = stringResource(R.string.map),
-                icon = Icons.Default.AccountCircle,
+                icon = R.drawable.icon_map,
                 screen = Screen.Map
             ),
             NavigationItem(
                 title = stringResource(R.string.setting),
                 icon = Icons.Default.Settings,
-                screen = Screen.Profile
+                screen = Screen.Setting
             ),
         )
         navigationItems.map { item ->
             NavigationBarItem(
                 icon = {
-                    Icon(
-                        imageVector = item.icon,
-                        contentDescription = item.title
-                    )
+                    if (item.icon is Int) {
+                        Icon(
+                            painter = painterResource(id = item.icon as Int),
+                            contentDescription = item.title,
+                            modifier = Modifier.size(30.dp)
+
+                        )
+                    } else if (item.icon is ImageVector) {
+                        Icon(
+                            imageVector = item.icon as ImageVector,
+                            contentDescription = item.title
+                        )
+                    }
                 },
                 label = { Text(item.title) },
                 selected = currentRoute == item.screen.route,

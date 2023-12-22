@@ -7,12 +7,14 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -45,11 +47,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import com.iqbalhario.parkspotter.R
 import com.iqbalhario.parkspotter.viewmodel.HomeScreenViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.iqbalhario.parkspotter.ui.navigation.Screen
 
 
@@ -65,7 +67,6 @@ fun HomeScreen(viewModel: HomeScreenViewModel = viewModel(), navController: NavC
     val filteredParkingData = viewModel.filteredParkingData.collectAsState(initial = emptyList()).value
     var query = remember { mutableStateOf("") }
 
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -75,7 +76,6 @@ fun HomeScreen(viewModel: HomeScreenViewModel = viewModel(), navController: NavC
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
                         textAlign = TextAlign.Center
-
                     )
                 },
                 actions = {
@@ -87,7 +87,9 @@ fun HomeScreen(viewModel: HomeScreenViewModel = viewModel(), navController: NavC
                         Icon(
                             painter = painterResource(R.drawable.ic_profile),
                             contentDescription = "Profile",
-                            modifier = Modifier.size(32.dp)
+                            modifier = Modifier
+                                .size(32.dp)
+                                .zIndex(1f)
                         )
                     }
                 },
@@ -124,13 +126,14 @@ fun HomeScreen(viewModel: HomeScreenViewModel = viewModel(), navController: NavC
                         fontSize = 20.sp,
                         modifier = Modifier.align(Alignment.Start)
                     )
+
                     Text(
                         text = "for you",
                         fontWeight = FontWeight.Medium,
                         fontSize = 20.sp,
                         modifier = Modifier.align(Alignment.Start)
                     )
-                    Spacer(modifier = Modifier.height(16.dp)) // Jika Anda ingin memberikan ruang di antara teks dan SearchBar
+                    Spacer(modifier = Modifier.height(16.dp))
                     SearchBar(
                         query = query,
                         onQueryChange = {
@@ -142,15 +145,28 @@ fun HomeScreen(viewModel: HomeScreenViewModel = viewModel(), navController: NavC
                         modifier = Modifier.fillMaxSize()
                     ) {
                         items(filteredParkingData) { parkirItem ->
-                            Text(
-                                text = parkirItem.name,
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .clickable {
-                                        val route = Screen.DetailParkir.createRoute(parkirItem.id)
-                                        navController.navigate(route)
-                                    }
-                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.baseline_local_parking_24),
+                                    contentDescription = "Open",
+                                    modifier = Modifier
+                                        .size(30.dp)
+
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = parkirItem.name,
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                        .clickable {
+                                            val route =
+                                                Screen.DetailParkir.createRoute(parkirItem.id)
+                                            navController.navigate(route)
+                                        }
+                                )
+                            }
                         }
                     }
                 }
